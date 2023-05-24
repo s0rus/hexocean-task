@@ -65,11 +65,17 @@ export const dishFormSchema = dishBaseSchema.superRefine((schema, ctx) => {
       }
       break;
     default:
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Invalid dish type',
+        path: ['type'],
+      });
       break;
   }
 });
 
 export type DishFormSchema = z.infer<typeof dishFormSchema>;
+export type DishErrorShape = Record<keyof DishFormSchema, string[]>;
 
 export const dishFormDefaultValues: Partial<DishFormSchema> = {
   name: '',

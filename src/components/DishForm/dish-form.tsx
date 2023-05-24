@@ -9,17 +9,28 @@ import { FormattedTimeInput, Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { useToast } from '../ui/use-toast';
 import AdditionalFormFields from './additional-form-fields';
-import { dishFormDefaultValues, dishFormSchema, dishTypeOptions, type DishFormSchema } from './dish-form-schema';
+import {
+  dishFormDefaultValues,
+  dishFormSchema,
+  dishTypeOptions,
+  type DishErrorShape,
+  type DishFormSchema,
+} from './dish-form-schema';
 import { parseDishDataByType } from './helpers/parse-dish-data-by-type';
+import { parseErrorMessage } from './helpers/parse-error-message';
 
 const handlePostDish = async (data: DishFormSchema) => {
-  await fetch(`${env.VITE_API_URL}`, {
+  const response = await fetch(`${env.VITE_API_URL}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   });
+
+  if (!response.ok) {
+    throw await response.json();
+  }
 };
 
 const DishForm = () => {
@@ -34,10 +45,21 @@ const DishForm = () => {
     onSuccess: () => {
       toast({
         title: 'Dish created',
-        description: 'Your dish has been created successfully',
+        description: 'Your dish has been created successfully!',
         duration: 5000,
       });
       form.reset(dishFormDefaultValues);
+    },
+    onError: (error) => {
+      const err = error as DishErrorShape;
+      const errorMessage = parseErrorMessage(err);
+
+      toast({
+        title: 'Whoops!',
+        description: errorMessage,
+        duration: 5000,
+        variant: 'destructive',
+      });
     },
   });
 
@@ -47,12 +69,6 @@ const DishForm = () => {
     const parsedData = parseDishDataByType(data);
     if (parsedData) {
       postDish(parsedData);
-    } else {
-      toast({
-        title: 'Woops!',
-        description: 'Something went wrong! Try again later.',
-        duration: 5000,
-      });
     }
   };
 
@@ -66,7 +82,7 @@ const DishForm = () => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,13 +93,14 @@ const DishForm = () => {
           name='preparation_time'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Preparation time</FormLabel>
               <FormControl>
                 <FormattedTimeInput
                   {...field}
                   format='##:##:##'
                   mask={['H', 'H', 'M', 'M', 'S', 'S']}
                   placeholder='HH:MM:SS'
+                  disabled={isLoading}
                 />
               </FormControl>
               <FormMessage />
@@ -104,7 +121,7 @@ const DishForm = () => {
                 </FormControl>
                 <SelectContent>
                   {dishTypeOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
+                    <SelectItem key={option} value={option} disabled={isLoading}>
                       {option}
                     </SelectItem>
                   ))}
@@ -114,8 +131,8 @@ const DishForm = () => {
             </FormItem>
           )}
         />
-        <AdditionalFormFields dishType={dishType} />
-        <Button type='submit' disabled={isLoading}>
+        <AdditionalFormFields dishType={dishType} isLoading={isLoading} />
+        <Button type='submit' disabled={isLoading} className='w-full font-bold'>
           {isLoading ? <Icons.loader className='mr-2 h-4 w-4 animate-spin' /> : <Icons.send className='mr-2 h-4 w-4' />}
           Submit
         </Button>

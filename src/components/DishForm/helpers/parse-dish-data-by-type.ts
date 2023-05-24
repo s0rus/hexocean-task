@@ -21,7 +21,6 @@ export const parseDishDataByType = (data: DishFormSchema) => {
         slices_of_bread,
       };
     default:
-      console.error('Unknown dish type');
       break;
   }
 };

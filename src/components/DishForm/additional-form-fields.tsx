@@ -5,9 +5,10 @@ import { DishFormSchema } from './dish-form-schema';
 
 interface AdditionalFormFieldsProps {
   dishType: DishFormSchema['type'];
+  isLoading?: boolean;
 }
 
-const AdditionalFormFields = ({ dishType }: AdditionalFormFieldsProps) => {
+const AdditionalFormFields = ({ dishType, isLoading }: AdditionalFormFieldsProps) => {
   const form = useFormContext<DishFormSchema>();
 
   switch (dishType) {
@@ -21,7 +22,7 @@ const AdditionalFormFields = ({ dishType }: AdditionalFormFieldsProps) => {
               <FormItem>
                 <FormLabel>Number of slices</FormLabel>
                 <FormControl>
-                  <Input {...field} type='number' />
+                  <Input {...field} type='number' disabled={isLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -34,7 +35,7 @@ const AdditionalFormFields = ({ dishType }: AdditionalFormFieldsProps) => {
               <FormItem>
                 <FormLabel>Diameter</FormLabel>
                 <FormControl>
-                  <FormattedFloatInput {...field} decimalScale={2} />
+                  <FormattedFloatInput {...field} decimalScale={2} disabled={isLoading} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -51,7 +52,7 @@ const AdditionalFormFields = ({ dishType }: AdditionalFormFieldsProps) => {
             <FormItem>
               <FormLabel>Spiciness scale (1-10)</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -67,7 +68,7 @@ const AdditionalFormFields = ({ dishType }: AdditionalFormFieldsProps) => {
             <FormItem>
               <FormLabel>Slices of bread</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>

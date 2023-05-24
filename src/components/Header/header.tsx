@@ -25,7 +25,7 @@ const Header = () => {
         </a>{' '}
         beautiful components. The code is on{' '}
         <a
-          href='https://ui.shadcn.com/docs'
+          href='https://github.com/s0rus/hexocean-task'
           className='underline-offset-4 hover:underline text-primary'
           target='_blank'
           rel='norefferer noopener'
