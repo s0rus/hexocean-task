@@ -1,8 +1,10 @@
-import type { DishErrorShape } from '../dish-form-schema';
+import type { DishErrorShape } from "../dish-form-schema";
 
 const prettifyKey = (key: string) => {
-  const words = key.split('_').map((word) => word.charAt(0).toUpperCase() + word.slice(1));
-  return words.join(' ');
+  const words = key
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+  return words.join(" ");
 };
 
 export const parseErrorMessage = (err: DishErrorShape) => {
@@ -10,9 +12,9 @@ export const parseErrorMessage = (err: DishErrorShape) => {
   // ? so I assume this is the only possible error shape.
 
   const errorMessage = Object.entries(err)
-    .map(([key, messages]) => `${prettifyKey(key)}: ${messages.join('\n')}`)
-    .join('\n')
+    .map(([key, messages]) => `${prettifyKey(key)}: ${messages.join("\n")}`)
+    .join("\n")
     .trim();
 
-  return errorMessage;
+  return errorMessage ? errorMessage : "Something went wrong...";
 };
