@@ -5,6 +5,9 @@ NPM version used: 9.6.2
 Node version used: v16.18.0  
 Time it took to complete: 8 hours  
 
+### Preview
+Preview through [vercel](https://hexocean-task-xi.vercel.app) or my [domain](https://hexocean.devsor.us/)
+
 ### Setup
 
 1. Clone the repo
